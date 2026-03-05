@@ -1,0 +1,17 @@
+.card-img-top {
+    height: 350px;
+    object-fit: cover;
+}
+
+.card {
+    transition: transform 0.2s ease-in-out;
+}
+.card:hover {
+    transform: translateY(-5px);
+}
+/* Mobile-first: Ajuste de fuente en pantallas pequeñas */
+@media (max-width: 420px) {
+    h1 {
+        font-size: 1.8rem;
+    }
+}
