@@ -87,27 +87,51 @@ function agregarAlCarro(id) {
 
 // Actualizar LocalStorage, Contador y Lista del Modal
 function actualizarTodo() {
-    // Guardar
+    // 1. Guardar estado actual en LocalStorage
     localStorage.setItem('carrito_manga', JSON.stringify(carrito));
     
-    // Contador Navbar
+    // 2. Actualizar el número rojo en la Navbar
     contadorNav.innerText = carrito.length;
 
-    // Renderizar Lista en el Modal
+    // 3. Limpiar la lista antes de volver a pintarla
     listaCarrito.innerHTML = "";
     let total = 0;
 
+    // 4. Recorrer el carrito para dibujar los productos en el modal
     carrito.forEach((item, index) => {
         total += item.precio;
+        
+        // Creamos el elemento de lista con un botón de eliminar (X)
         listaCarrito.innerHTML += `
             <li class="list-group-item d-flex justify-content-between align-items-center">
-                ${item.titulo}
-                <span>$${item.precio.toLocaleString('es-CL')}</span>
+                <div class="me-auto">
+                    <span class="fw-bold">${item.titulo}</span>
+                    <br>
+                    <small class="text-muted">$${item.precio.toLocaleString('es-CL')}</small>
+                </div>
+                <button onclick="eliminarDelCarro(${index})" class="btn btn-sm btn-outline-danger border-0">
+                    🗑️
+                </button>
             </li>
         `;
     });
 
+    // 5. Si el carrito está vacío, mostrar un mensaje
+    if (carrito.length === 0) {
+        listaCarrito.innerHTML = `<li class="list-group-item text-center text-muted">El carrito está vacío</li>`;
+    }
+
+    // 6. Actualizar el precio total en el Modal
     totalCarrito.innerText = `$${total.toLocaleString('es-CL')}`;
+}
+
+// NUEVA FUNCIÓN: Eliminar producto por su posición en el array
+function eliminarDelCarro(index) {
+    // Eliminamos 1 elemento en la posición 'index'
+    carrito.splice(index, 1);
+    
+    // Volvemos a ejecutar la actualización para que cambie el total y la lista
+    actualizarTodo();
 }
 
 // 5. Inicializar
