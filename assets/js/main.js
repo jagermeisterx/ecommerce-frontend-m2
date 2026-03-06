@@ -1,4 +1,4 @@
-// 1. Datos de los productos (Simulación)
+//Datos de prueba
 const productos = [
     { id: 1, titulo: "One Piece Vol. 100", precio: 6500, descripcion:"Un chico de goma que navega por el mundo para buscar un tesoro que lleva 30 años perdido, mientras derroca dictaduras y recluta a gente más rara que él (incluyendo un reno y un esqueleto) para que lo ayuden a ser el Rey de los Piratas.", img: "https://images.cdn2.buscalibre.com/fit-in/360x360/74/6e/746ef577d082b96e830418dc6de775cd.jpg", stock: 10 },
     { id: 2, titulo: "Detective Conan", descripcion: "Es la historia de un niño que ha estado en el mismo curso escolar durante tres décadas, resolviendo miles de asesinatos mientras el mundo entero ignora que, estadísticamente, la ciudad de Tokio debería estar deshabitada debido a su presencia.", precio: 5000, img: "https://mokuton.com/covers//Detective%20Conan/001.jpg", stock: 5 },
@@ -7,7 +7,7 @@ const productos = [
 ];
 
 
-// 2. Estado del Carrito 
+//Estado del Carrito 
 let carrito = JSON.parse(localStorage.getItem('carrito_manga')) || [];
 
 // 3. Selectores
@@ -16,13 +16,11 @@ const listaCarrito = document.getElementById('lista-carrito');
 const totalCarrito = document.getElementById('total-carrito');
 const contadorNav = document.getElementById('cart-count');
 
-// 4. Funciones
-
+//Funciones
 function renderizarProductos() {
-    contenedor.innerHTML = ""; // Limpiamos el contenedor
-    
+    contenedor.innerHTML = "";    
     productos.forEach(p => {
-        // Creamos la estructura de la card
+        // Creacion de la estructura de la card
         // Importante: El id que pasamos en verDetalle(${p.id}) debe ser el del objeto actual
         contenedor.innerHTML += `
             <article class="col">
@@ -52,9 +50,8 @@ function renderizarProductos() {
     });
 }
 
-// Función que busca el producto específico y llena el modal
+// Función que busca el producto específico y llena el modal con el id
 function verDetalle(id) {
-    // Buscamos en el array el objeto que coincida con el ID clickeado
     const productoSeleccionado = productos.find(item => item.id === id);
     
     if (productoSeleccionado) {
@@ -64,7 +61,7 @@ function verDetalle(id) {
         document.getElementById('detalleDescripcion').innerText = productoSeleccionado.descripcion;
         document.getElementById('detallePrecio').innerText = `$${productoSeleccionado.precio.toLocaleString('es-CL')}`;
         
-        // Actualizamos el botón de "Agregar" dentro del modal para que también tenga el ID correcto
+        // se actualiza el botón de agregar para que agregue el producto correcto
         const btnModal = document.getElementById('btnAgregarDesdeDetalle');
         btnModal.onclick = function() {
             agregarAlCarro(productoSeleccionado.id);
@@ -76,8 +73,6 @@ function verDetalle(id) {
     }
 }
 
-
-
 // Agregar al carrito
 function agregarAlCarro(id) {
     const productoEncontrado = productos.find(p => p.id === id);
@@ -87,21 +82,19 @@ function agregarAlCarro(id) {
 
 // Actualizar LocalStorage, Contador y Lista del Modal
 function actualizarTodo() {
-    // 1. Guardar estado actual en LocalStorage
+    //guardar estado actual en LocalStorage
     localStorage.setItem('carrito_manga', JSON.stringify(carrito));
     
-    // 2. Actualizar el número rojo en la Navbar
+    //actualizar el número rojo del carrito
     contadorNav.innerText = carrito.length;
 
-    // 3. Limpiar la lista antes de volver a pintarla
+    // Limpiar la lista antes de volver a pintarla
     listaCarrito.innerHTML = "";
     let total = 0;
 
-    // 4. Recorrer el carrito para dibujar los productos en el modal
+    // Recorrer el carrito para dibujar los productos en el modal (carrito de compra)
     carrito.forEach((item, index) => {
-        total += item.precio;
-        
-        // Creamos el elemento de lista con un botón de eliminar (X)
+        total += item.precio;        
         listaCarrito.innerHTML += `
             <li class="list-group-item d-flex justify-content-between align-items-center">
                 <div class="me-auto">
@@ -116,24 +109,21 @@ function actualizarTodo() {
         `;
     });
 
-    // 5. Si el carrito está vacío, mostrar un mensaje
+    //Si el carrito está vacío, mostrar un mensaje
     if (carrito.length === 0) {
         listaCarrito.innerHTML = `<li class="list-group-item text-center text-muted">El carrito está vacío</li>`;
     }
 
-    // 6. Actualizar el precio total en el Modal
+    //Actualizar el precio total
     totalCarrito.innerText = `$${total.toLocaleString('es-CL')}`;
 }
 
-// NUEVA FUNCIÓN: Eliminar producto por su posición en el array
+//eliminar producto por su posición en el array
 function eliminarDelCarro(index) {
-    // Eliminamos 1 elemento en la posición 'index'
     carrito.splice(index, 1);
-    
-    // Volvemos a ejecutar la actualización para que cambie el total y la lista
     actualizarTodo();
 }
 
-// 5. Inicializar
+//Inicializar
 renderizarProductos();
 actualizarTodo();
